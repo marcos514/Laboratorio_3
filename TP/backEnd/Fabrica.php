@@ -20,7 +20,7 @@ class Fabrica implements IArchivo
         $ret=TRUE;
         if(count($this->_empleados)+1<=$this->_cantidadMaxima )
         {
-            if($this->EliminarEmpleadoRepetidoLegajo($emp->GetLegajo()))
+            if($this->GetIndexEmpeado_Legajo($emp->GetLegajo())==-1)
             {
                 array_push($this->_empleados,$emp);
                 $this->EliminarEmpleadoRepetido();
@@ -67,26 +67,35 @@ class Fabrica implements IArchivo
                 }
                 $i++;
             }
-            /*for($i=0;$i<count($this->_empleados)-1;$i++)
-            {
-                if($emp->GetDni()==($this->_empleados[$i])->GetDni())
-                {   
-                    unset($this->_empleados[$i]);
-                    $eliminado=true;
-                    break;
-                }
-            }*/
         }
         
         return $eliminado;
     }
-    public function EliminarEmpleadoRepetidoLegajo($legajo)
+    public function GetIndexEmpeado_Legajo($legajo)
     {
         $retorno=-1;
         $i=0;
         foreach ($this->_empleados as $empleadosAux) 
         {
             if($empleadosAux->GetLegajo()==$legajo)
+            {
+                $retorno=$i;
+                break;
+            }
+            $i++;
+        }
+        $i=-1;
+        return $retorno;
+    }
+
+
+    public function GetIndexEmpleado_DniApellido($dni,$apellido)
+    {
+        $retorno=-1;
+        $i=0;
+        foreach ($this->GetEmpleados() as $empleadosAux) 
+        {
+            if($empleadosAux->GetDni()==$dni && $empleadosAux->GetApellido()==$apellido)
             {
                 $retorno=$i;
                 break;
@@ -138,15 +147,15 @@ class Fabrica implements IArchivo
                 }
                 if($comp)
                 {
-                    break;
+                    
                 }
                 else
                 {
                     
-                    $empleado=new Empleado($auxEmpleado[1],$auxEmpleado[0],$auxEmpleado[3],$auxEmpleado[2],$auxEmpleado[6],$auxEmpleado[4],$auxEmpleado[5]);
+                    $empleado=new Empleado($auxEmpleado[0],$auxEmpleado[1],$auxEmpleado[3],$auxEmpleado[2],$auxEmpleado[6],$auxEmpleado[4],$auxEmpleado[5],$auxEmpleado[8]);
                     $this->AgregarEmpleado($empleado);  
                 }
-                
+
             }   
         }
         fclose($archivo);

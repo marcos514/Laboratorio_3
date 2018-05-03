@@ -6,6 +6,8 @@ function ValidarRangoNumerico(valor:number,min:number,max:number):boolean
 {
     return valor<=max&&valor>=min;
 }
+
+
 function ValidarCombo(valor:string,anular:string):boolean
 {
     return !(valor==anular);
@@ -47,34 +49,34 @@ function AdministrarValidaciones():void
     {
         if(!ValidarRangoNumerico((<HTMLInputElement>document.getElementById("txtDni")).valueAsNumber,1000000,55000000))
         {
-            alert("El dni no respeta los limites");
+            (<HTMLSpanElement>document.getElementById("spnDni")).style.display="block";
             comprobador=false;
         }
     }
     else
     {
-        alert("Ingrese Dni");
+        (<HTMLSpanElement>document.getElementById("spnDni")).style.display="block";
         comprobador=false;
     }
 
 
     if(!ValidarCamposVacios((<HTMLInputElement>document.getElementById("txtApellido")).value))
     {
-        alert("Ingresar Apellido");
+        (<HTMLSpanElement>document.getElementById("spnApellido")).style.display="block";
         comprobador=false;
     }
 
 
     if(!ValidarCamposVacios((<HTMLInputElement>document.getElementById("txtNombre")).value))
     {
-        alert("Ingresar Nombre");
+        (<HTMLSpanElement>document.getElementById("spnNombre")).style.display="block";
         comprobador=false;
     }
 
 
     if(!ValidarCombo((<HTMLInputElement>document.getElementById("cboSexo")).value,"--"))
     {
-        alert("Seleccione su sexo");
+        (<HTMLSpanElement>document.getElementById("spnSexo")).style.display="block";
         comprobador=false;
     }
 
@@ -83,13 +85,13 @@ function AdministrarValidaciones():void
     {
         if(!ValidarRangoNumerico((<HTMLInputElement>document.getElementById("txtLegajo")).valueAsNumber,100,550))
         {
-            alert("El Legajo no respeta los limites");
+            (<HTMLSpanElement>document.getElementById("spnLegajo")).style.display="block";
             comprobador=false;
         }
     }
     else
     {
-        alert("Ingresar el legajo");
+        (<HTMLSpanElement>document.getElementById("spnLegajo")).style.display="block";
         comprobador=false;
     }
 
@@ -97,13 +99,13 @@ function AdministrarValidaciones():void
     {
         if(!ValidarRangoNumerico((<HTMLInputElement>document.getElementById("txtSueldo")).valueAsNumber,8000,ObtenerSueldoMaximo(ObtenerTurnoSeleccionado())))
         {
-            alert("El Sueldo no respeta los limites");
+            (<HTMLSpanElement>document.getElementById("spnSueldo")).style.display="block";
             comprobador=false;
         }
     }
     else
     {
-        alert("Ingresar el sueldo");
+        (<HTMLSpanElement>document.getElementById("spnSueldo")).style.display="block";
         comprobador=false;
     }
 
@@ -112,4 +114,33 @@ function AdministrarValidaciones():void
         (<HTMLFormElement>document.getElementById("frmEmpleado")).submit();
     }
     
+}
+
+function AdministrarValidacionesLogin()
+{
+    let comprobador=true;
+    if(ValidarCamposVacios((<HTMLInputElement>document.getElementById("txtDni")).value))
+    {
+        if(!ValidarRangoNumerico((<HTMLInputElement>document.getElementById("txtDni")).valueAsNumber,1000000,55000000))
+        {
+            (<HTMLSpanElement>document.getElementById("spnDni")).style.display="block";
+            comprobador=false;
+        }
+    }
+    else
+    {
+        (<HTMLSpanElement>document.getElementById("spnDni")).style.display="block";
+        comprobador=false;
+    }
+
+    if(!ValidarCamposVacios((<HTMLInputElement>document.getElementById("txtApellido")).value))
+    {
+        (<HTMLSpanElement>document.getElementById("spnApellido")).style.display="block";
+        comprobador=false;
+    }
+
+    if(comprobador)
+    {
+        (<HTMLFormElement>document.getElementById("frmLogin")).submit();
+    }
 }

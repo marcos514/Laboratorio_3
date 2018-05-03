@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Formulario LogIn</title>
+    <script src="./javascript/funciones.js" ></script>
+</head>
+<body>
+    <h2>LogIn</h2>
+    <center>
+        <form action="../backEnd/verificarUsuario.php" name="frmLogin" id="frmLogin" method="POST">
+            <table>
+                <tr>
+                    <td colspan="3"><h4>Ingreso de Credenciales</h4></td>
+                </tr>
+                <tr>
+                    <td>DNI:</td>
+                    <td colspan="2"><input type="number" name="txtDni" id="txtDni" min="1000000" max="55000000" step="1"><span id="spnDni" style="display:none">*</span></td>
+                </tr>
+                <tr>
+                    <td>Apellido:</td>
+                    <td colspan="2"><input type="text" id="txtApellido" name="txtApellido"/><span id="spnApellido" style="display:none">*</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:right">
+                        <input type="reset" value="Limpiar"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:right">
+                        <input type="button" onclick="AdministrarValidacionesLogin()" name="btnEnviar" value="Enviar"/>
+                        <!--submit-->
+                    </td>
+                </tr>
+            </table>
+        </form> 
+    </center>
+    
+</body>
+</html>

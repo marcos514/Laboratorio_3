@@ -8,25 +8,13 @@ function ValidarCombo(valor, anular) {
     return !(valor == anular);
 }
 function ObtenerTurnoSeleccionado() {
-    if (document.getElementById("tManiana").checked) {
-        return "Mañana";
-    }
-    if (document.getElementById("tTarde").checked) {
-        return "Tarde";
-    }
-    if (document.getElementById("tNoche").checked) {
-        return "Noche";
-    }
-    return "";
-    /*let valores=document.getElementsByName("rdoTurno");
-    for(let i:number=0;i<valores.length;i++)
-    {
-        if((<HTMLInputElement>valores[i]).checked)
-        {
-            return <string>valores[i].;
+    var valores = document.getElementsByName("rdoTurno");
+    for (var i = 0; i < valores.length; i++) {
+        if (valores[i].checked) {
+            return valores[i].value;
         }
     }
-    return "";*/
+    return "";
 }
 function ObtenerSueldoMaximo(turno) {
     if (turno == "Mañana") {
@@ -43,47 +31,67 @@ function AdministrarValidaciones() {
     var comprobador = true;
     if (ValidarCamposVacios(document.getElementById("txtDni").value)) {
         if (!ValidarRangoNumerico(document.getElementById("txtDni").valueAsNumber, 1000000, 55000000)) {
-            alert("El dni no respeta los limites");
+            document.getElementById("spnDni").style.display = "block";
             comprobador = false;
         }
     }
     else {
-        alert("Ingrese Dni");
+        document.getElementById("spnDni").style.display = "block";
         comprobador = false;
     }
     if (!ValidarCamposVacios(document.getElementById("txtApellido").value)) {
-        alert("Ingresar Apellido");
+        document.getElementById("spnApellido").style.display = "block";
         comprobador = false;
     }
     if (!ValidarCamposVacios(document.getElementById("txtNombre").value)) {
-        alert("Ingresar Nombre");
+        document.getElementById("spnNombre").style.display = "block";
         comprobador = false;
     }
     if (!ValidarCombo(document.getElementById("cboSexo").value, "--")) {
-        alert("Seleccione su sexo");
+        document.getElementById("spnSexo").style.display = "block";
         comprobador = false;
     }
     if (ValidarCamposVacios(document.getElementById("txtLegajo").value)) {
         if (!ValidarRangoNumerico(document.getElementById("txtLegajo").valueAsNumber, 100, 550)) {
-            alert("El Legajo no respeta los limites");
+            document.getElementById("spnLegajo").style.display = "block";
             comprobador = false;
         }
     }
     else {
-        alert("Ingresar el legajo");
+        document.getElementById("spnLegajo").style.display = "block";
         comprobador = false;
     }
     if (ValidarCamposVacios(document.getElementById("txtSueldo").value)) {
         if (!ValidarRangoNumerico(document.getElementById("txtSueldo").valueAsNumber, 8000, ObtenerSueldoMaximo(ObtenerTurnoSeleccionado()))) {
-            alert("El Sueldo no respeta los limites");
+            document.getElementById("spnSueldo").style.display = "block";
             comprobador = false;
         }
     }
     else {
-        alert("Ingresar el sueldo");
+        document.getElementById("spnSueldo").style.display = "block";
         comprobador = false;
     }
     if (comprobador) {
         document.getElementById("frmEmpleado").submit();
+    }
+}
+function AdministrarValidacionesLogin() {
+    var comprobador = true;
+    if (ValidarCamposVacios(document.getElementById("txtDni").value)) {
+        if (!ValidarRangoNumerico(document.getElementById("txtDni").valueAsNumber, 1000000, 55000000)) {
+            document.getElementById("spnDni").style.display = "block";
+            comprobador = false;
+        }
+    }
+    else {
+        document.getElementById("spnDni").style.display = "block";
+        comprobador = false;
+    }
+    if (!ValidarCamposVacios(document.getElementById("txtApellido").value)) {
+        document.getElementById("spnApellido").style.display = "block";
+        comprobador = false;
+    }
+    if (comprobador) {
+        document.getElementById("frmLogin").submit();
     }
 }

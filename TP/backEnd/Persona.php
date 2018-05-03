@@ -26,7 +26,7 @@ abstract class Persona
     {
         return $this->_dni;
     }
-    public function GetEdad()
+    public function GetSexo()
     {
         return $this->_sexo;
     }
@@ -35,7 +35,7 @@ abstract class Persona
 
     public function ToString()
     {
-        return $this->GetNombre()." - ".$this->GetApellido()." - ".$this->GetEdad()." - ".$this->GetDni();
+        return $this->GetNombre()." - ".$this->GetApellido()." - ".$this->GetSexo()." - ".$this->GetDni();
     }
 
 

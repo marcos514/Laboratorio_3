@@ -4,7 +4,7 @@ include_once "Persona.php";
 include_once "Fabrica.php";
 $fabrica=new Fabrica("Marcos S.A",7);
 $fabrica->TraerDeArchivo("archivo.txt");
-$empleadoLugar=$fabrica->EliminarEmpleadoRepetidoLegajo((int)$_GET["legajo"]);
+$empleadoLugar=$fabrica->GetIndexEmpeado_Legajo((int)$_GET["legajo"]);
 if($empleadoLugar!=-1)
 {
     if($fabrica->EliminarEmpleado($fabrica->GetEmpleados()[$empleadoLugar]))

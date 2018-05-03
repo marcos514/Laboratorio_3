@@ -5,14 +5,26 @@ class Empleado extends Persona
     protected $_legajo;
     protected $_sueldo;
     protected $_turno;
+    protected $_pathFoto;
 
-    public function __construct($nombre,$apellido,$dni,$sexo,$legajo,$sueldo,$turno)
+    public function __construct($nombre,$apellido,$dni,$sexo,$legajo,$sueldo,$turno,$pathFoto)
     {
         parent::__construct($nombre,$apellido,$dni,$sexo);
         $this->_legajo=$legajo;
         $this->_sueldo=$sueldo;
         $this->_turno=$turno;
+        $this->_pathFoto=$pathFoto;
         
+    }
+
+    public function GetPathFoto()
+    {
+        return $this->_pathFoto;
+    }
+    
+    public function SetPathFoto($pathFoto)
+    {
+        $this->_pathFoto=$pathFoto;
     }
 
 
@@ -44,7 +56,7 @@ class Empleado extends Persona
 
     public function ToString()
     {
-        return parent::ToString()." - ".$this->getSueldo()." - ".$this->getTurno()." - ".$this->GetLegajo()." - ".$this->Hablar(array("Español","Ingles"));
+        return parent::ToString()." - ".$this->getSueldo()." - ".$this->getTurno()." - ".$this->GetLegajo()." - ".$this->Hablar(array("T"))." - ".$this->GetPathFoto();
     }
 
 

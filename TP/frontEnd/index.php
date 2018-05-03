@@ -7,7 +7,7 @@
     </head>
     <body>
         <h2>Alta Empleados</h2>
-        <form action="../backEnd/administracion.php" id="frmEmpleado" name="frmEmpleado" method="post">
+        <form action="../backEnd/administracion.php" id="frmEmpleado" name="frmEmpleado" method="post" enctype="multipart/form-data">
             <table  align="center">
             <thread>
                 <td colspan="3"><h4>Datos Personales</h4></td>
@@ -74,6 +74,13 @@
                     <input type="radio" id="tNoche" name="rdoTurno" value="Noche"/>						
                 </td>
                 <td colspan="2">Noche</td>
+            </tr>
+            <tr>
+                <td colspan="3"><hr></td>
+            </tr>
+            <tr>
+                <td>Foto</td>
+                <td colspan="2"><input type="file" accept="image/*" name="imgEmpleado" id="imgEmpleado"></td>
             </tr>
             <tr>
                 <td colspan="3"><hr></td>
