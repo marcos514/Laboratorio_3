@@ -1,13 +1,14 @@
 <?php
 $caso = isset($_POST["caso"]) ? $_POST["caso"] : null;
 
-sleep(1);
-
-switch ($caso) {
+switch ($caso) 
+{
 
     case 'agregar':
 
         $cadenaJSON = isset($_POST['cadenaJson']) ? $_POST['cadenaJson'] : null;
+        $json=json_decode($cadenaJSON);
+        //move_uploaded_file($_FILES["foto"]["tmp_name"], $json->path);
 
         $ar = fopen("./autos.json", "a");
 		
@@ -18,7 +19,6 @@ switch ($caso) {
         $resultado["TodoOK"] = $cant > 0 ? true : false;
 
         echo json_encode($resultado);
-
         break;
 
     case 'mostrar':
@@ -49,6 +49,7 @@ switch ($caso) {
         $obj = json_decode($cadenaJSON);
 
         $a = fopen("./autos.json","r");
+        
 
         $string = '';
 
@@ -61,6 +62,7 @@ switch ($caso) {
                 $objLinea = json_decode($linea);
 
                 if($objLinea->patente == $obj->patente){
+                    unlink("..".$objLinea->path);
                     continue;
                 }
 
@@ -101,6 +103,7 @@ switch ($caso) {
                 $objLinea = json_decode($linea);
 
                 if($objLinea->patente == $obj->patente){
+                    unlink("..".$objLinea->path);
                     continue;
                 }
                 
@@ -109,6 +112,9 @@ switch ($caso) {
         }
 
         $string .=  $cadenaJSON . "\r\n";
+        move_uploaded_file($_FILES["foto"]["tmp_name"], "..".$obj->path);
+        
+        
 
         fclose($a);
 
@@ -138,7 +144,6 @@ switch ($caso) {
         echo ($paises);
 
         break;
-
     default:
         echo ":(";
         break;

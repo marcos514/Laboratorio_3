@@ -42,13 +42,18 @@
                 <td><input type="text" id="txtPrecio" /></td>
               </tr>
               <tr>
+                <td><label class="col-md-2 control-label">Foto</label></td>
+                <td><input type="file" id="foto"></td>
+              </tr>
+              <tr>
                 <td colspan="2">
                   <input type="button" value="Agregar" class="btn btn-success" onclick="Enlace.Manejadora.Agregar()" />
                   <input type="button" value="Mostrar" class="btn btn-info" onclick="Enlace.Manejadora.Mostrar()" />
-                  <input type="button" value="Filtrar por Marca" class="btn btn-default" onclick="" />
-                  <input type="button" value="Cargar Marcas" class="btn btn-warning" onclick="" />
+                  <input type="button" value="Filtrar por Marca" class="btn btn-default" onclick="Enlace.Manejadora.FiltrarMarca()" />
+                  <input type="button" value="Cargar Marcas" class="btn btn-warning" onclick="Enlace.Manejadora.CargarMarcas()" />
                 </td>
               </tr>
+              
             </table>
           </td>
           <td>

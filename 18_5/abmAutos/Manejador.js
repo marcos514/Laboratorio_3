@@ -2,13 +2,14 @@
 var Clases;
 (function (Clases) {
     var Auto = /** @class */ (function () {
-        function Auto(patente, marca, precio) {
+        function Auto(patente, marca, precio, path) {
+            this._path = path;
             this._marca = marca;
             this._patente = patente;
             this._precio = precio;
         }
         Auto.prototype.ToJason = function () {
-            var strJson = "{\"marca\":\"" + this._marca + "\",\"precio\":" + this._precio + ",\"patente\":\"" + this._patente + "\"}";
+            var strJson = "{\"marca\":\"" + this._marca + "\",\"precio\":" + this._precio + ",\"patente\":\"" + this._patente + "\",\"path\":\"" + this._path + "\"}";
             var objJason = JSON.parse(strJson);
             return objJason;
         };
@@ -66,6 +67,7 @@ var Ajax = /** @class */ (function () {
     }
     return Ajax;
 }());
+/// <reference path="node_modules/@types/jquery/index.d.ts" />
 /// <reference path="Auto.ts"/>
 /// <reference path="ajax/Ajax.ts"/>
 var Enlace;
@@ -74,38 +76,97 @@ var Enlace;
         function Manejadora() {
         }
         Manejadora.Agregar = function () {
+            var pagina = "./BACKEND/administrar.php";
+            var archivo = document.getElementById("foto");
             var patente = document.getElementById("txtPatente").value;
             var strprecio = document.getElementById("txtPrecio").value;
             var marca = document.getElementById("cboMarca").value;
+            var path = "fotos/" + Date.now() + ".jpg";
             var precio = Number(strprecio);
-            var auto = new Clases.Auto(patente, marca, precio);
+            var auto = new Clases.Auto(patente, marca, precio, path);
             var strAuto = JSON.stringify(auto.ToJason());
-            var ajax = new XMLHttpRequest();
-            ajax.open("POST", "BACKEND/administrar.php", true);
-            ajax.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-            if (document.getElementById("hdnIdModificacion").value == "modificar") {
-                ajax.send("caso=modificar&cadenaJson=" + strAuto);
+            var formData = new FormData();
+            //formData.append("foto",archivo.files[0]);
+            formData.append("cadenaJson", strAuto);
+            formData.append("caso", "agregar");
+            // es attr si es 1.9 o menor
+            //$("#txtPatente").prop('readOnly', false);
+            console.log(strAuto);
+            $.ajax({
+                type: 'POST',
+                url: pagina,
+                dataType: "json",
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (objJson) {
+                if (objJson.TodoOK) {
+                    console.log("ok");
+                }
+                else {
+                    console.log("no ok");
+                }
+                document.getElementById("txtPatente").value = "";
+                document.getElementById("txtPrecio").value = "";
                 document.getElementById("txtPatente").readOnly = false;
+                document.getElementById("hdnIdModificacion").value = "";
+            })
+                .fail(function (aaa) {
+                console.log(JSON.stringify(aaa));
+            });
+            /*
+            
+           
+            
+            let ajax:XMLHttpRequest=new XMLHttpRequest();
+            ajax.open("POST","BACKEND/administrar.php",true);
+            ajax.setRequestHeader("enctype,content-type", "multipart/form-data,application/x-www-form-urlencoded");
+            let foto : any = (<HTMLInputElement> document.getElementById("foto"));
+            //INSTANCIO OBJETO FORMDATA
+            let form : FormData = new FormData();
+            //PARAMETRO RECUPERADO POR $_FILES
+            form.append('foto', foto.files[0]);
+
+
+            
+            if((<HTMLInputElement>document.getElementById("hdnIdModificacion")).value=="modificar")
+            {
+                form.append('caso', "modificar");
+                form.append('cadenaJson', strAuto);
+                ajax.send(form);
             }
-            else {
-                ajax.send("caso=agregar&cadenaJson=" + strAuto);
+            else
+            {
+                form.append('op', "agregar");
+                form.append('cadenaJson', strAuto);
+                ajax.send(form);
             }
-            ajax.onreadystatechange = function () {
-                if (ajax.readyState == 4 && ajax.status == 200) {
-                    var obj = JSON.parse(ajax.responseText);
-                    if (obj.TodoOK) {
+            (<HTMLInputElement>document.getElementById("txtPatente")).readOnly=false;
+            
+            ajax.onreadystatechange=()=>{
+                if(ajax.readyState==4 && ajax.status==200)
+                {
+                    let obj:any=JSON.parse(ajax.responseText);
+                    if(obj.TodoOK)
+                    {
                         console.log("ok");
                     }
-                    else {
+                    else
+                    {
                         console.log("no ok");
+
                     }
-                    document.getElementById("txtPatente").value = "";
-                    document.getElementById("txtPrecio").value = "";
-                    document.getElementById("cboMarca").value = "";
-                    document.getElementById("txtPatente").readOnly = false;
-                    document.getElementById("hdnIdModificacion").value = "";
+                    (<HTMLInputElement>document.getElementById("txtPatente")).value="";
+                    (<HTMLInputElement>document.getElementById("txtPrecio")).value="";
+                    (<HTMLSelectElement>document.getElementById("cboMarca")).value="";
+                    (<HTMLInputElement>document.getElementById("txtPatente")).readOnly=false;
+                    (<HTMLInputElement>document.getElementById("hdnIdModificacion")).value="";
+
+                    
+                    
                 }
-            };
+            };*/
         };
         Manejadora.Mostrar = function () {
             var ajax = new XMLHttpRequest();
@@ -114,11 +175,12 @@ var Enlace;
             ajax.send("caso=mostrar");
             ajax.onreadystatechange = function () {
                 if (ajax.readyState == 4 && ajax.status == 200) {
+                    console.log(ajax.responseText);
                     var arrayJSON = JSON.parse(ajax.responseText);
                     var fila = "<table>";
                     for (var i = 0; i < arrayJSON.length; i++) {
                         var json = JSON.stringify(arrayJSON[i]);
-                        fila += "<tr><td>" + arrayJSON[i].patente + "</td><td>" + arrayJSON[i].marca + "</td><td>" + arrayJSON[i].precio + "</td><td><input type='button' onclick='Enlace.Manejadora.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejadora.Modificar(" + json + ")' value='Modificar'/> </td></tr>";
+                        fila += "<tr><td>" + arrayJSON[i].patente + "</td><td>" + arrayJSON[i].marca + "</td><td>" + arrayJSON[i].precio + "</td><td><img id=\"imgFoto\" src=" + arrayJSON[i].path + " width=\"50px\" height=\"50px\" /></td><td><input type='button' onclick='Enlace.Manejadora.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejadora.Modificar(" + json + ")' value='Modificar'/> </td></tr>";
                     }
                     document.getElementById("divTabla").innerHTML = fila + "</table>";
                 }
@@ -134,6 +196,7 @@ var Enlace;
                     var obj = JSON.parse(ajax.responseText);
                     if (obj.TodoOK) {
                         console.log("ok");
+                        Manejadora.Mostrar();
                     }
                     else {
                         console.log("no ok");
@@ -147,6 +210,40 @@ var Enlace;
             document.getElementById("cboMarca").value = jsonstr.marca;
             document.getElementById("txtPatente").readOnly = true;
             document.getElementById("hdnIdModificacion").value = "modificar";
+        };
+        Manejadora.CargarMarcas = function () {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "BACKEND/administrar.php", true);
+            ajax.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+            ajax.send("caso=marcas");
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    var obj = JSON.parse(ajax.responseText);
+                    for (var i = 0; i < obj.length; i++) {
+                        document.getElementById("cboMarca").innerHTML += "<option>" + obj[i].descripcion + "</option>";
+                    }
+                }
+            };
+        };
+        Manejadora.FiltrarMarca = function () {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "BACKEND/administrar.php", true);
+            ajax.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+            ajax.send("caso=mostrar");
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    var arrayJSON = JSON.parse(ajax.responseText);
+                    var fila = "<table>";
+                    var marcaSelected = document.getElementById("cboMarca").value;
+                    for (var i = 0; i < arrayJSON.length; i++) {
+                        if (arrayJSON[i].marca == marcaSelected) {
+                            var json = JSON.stringify(arrayJSON[i]);
+                            fila += "<tr><td>" + arrayJSON[i].patente + "</td><td>" + arrayJSON[i].marca + "</td><td>" + arrayJSON[i].precio + "</td><td><img id=\"imgFoto\" src=" + arrayJSON[i].path + " width=\"50px\" height=\"50px\" /></td><td><input type='button' onclick='Enlace.Manejadora.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejadora.Modificar(" + json + ")' value='Modificar'/> </td></tr>";
+                        }
+                    }
+                    document.getElementById("divTabla").innerHTML = fila + "</table>";
+                }
+            };
         };
         return Manejadora;
     }());
