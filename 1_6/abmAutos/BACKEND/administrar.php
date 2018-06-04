@@ -1,7 +1,8 @@
 <?php
 $caso = isset($_POST["caso"]) ? $_POST["caso"] : null;
 
-switch ($caso) {
+switch ($caso) 
+{
 
     case 'agregar':
 
@@ -17,8 +18,7 @@ switch ($caso) {
 
         $resultado["TodoOK"] = $cant > 0 ? true : false;
 
-        echo $resultado;
-
+        echo json_encode($resultado);
         break;
 
     case 'mostrar':

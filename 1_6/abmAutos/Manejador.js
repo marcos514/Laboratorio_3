@@ -67,7 +67,7 @@ var Ajax = /** @class */ (function () {
     }
     return Ajax;
 }());
-/// <reference path="./libs/jquery/index.d.ts" />
+/// <reference path="node_modules/@types/jquery/index.d.ts" />
 /// <reference path="Auto.ts"/>
 /// <reference path="ajax/Ajax.ts"/>
 var Enlace;
@@ -97,30 +97,23 @@ var Enlace;
                 url: pagina,
                 dataType: "json",
                 data: formData,
-                cache: false,
                 contentType: false,
-                processData: false,
-                async: true
+                processData: false
             })
                 .done(function (objJson) {
-                /*
-                    if(objJson.TodoOK)
-                    {
-                        console.log("ok");
-                    }
-                    else
-                    {
-                        console.log("no ok");
-
-                    }*/
-                console.log("ok");
+                if (objJson.TodoOK) {
+                    console.log("ok");
+                }
+                else {
+                    console.log("no ok");
+                }
                 document.getElementById("txtPatente").value = "";
                 document.getElementById("txtPrecio").value = "";
-                document.getElementById("cboMarca").value = "";
                 document.getElementById("txtPatente").readOnly = false;
                 document.getElementById("hdnIdModificacion").value = "";
             })
                 .fail(function (aaa) {
+                console.log(JSON.stringify(aaa));
             });
             /*
             

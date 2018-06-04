@@ -1,4 +1,4 @@
-/// <reference path="./libs/jquery/index.d.ts" />
+/// <reference path="node_modules/@types/jquery/index.d.ts" />
 /// <reference path="Auto.ts"/>
 /// <reference path="ajax/Ajax.ts"/>
 
@@ -26,6 +26,7 @@ namespace Enlace
             let formData : FormData = new FormData();
             //formData.append("foto",archivo.files[0]);
             formData.append("cadenaJson", strAuto);
+            
             formData.append("caso", "agregar");
 
             // es attr si es 1.9 o menor
@@ -38,13 +39,10 @@ namespace Enlace
                 url: pagina,
                 dataType:"json",
                 data: formData,
-                cache: false,
                 contentType: false,
                 processData: false,
-                async: true
             })
             .done(function (objJson) {
-                /*
                     if(objJson.TodoOK)
                     {
                         console.log("ok");
@@ -53,16 +51,15 @@ namespace Enlace
                     {
                         console.log("no ok");
 
-                    }*/
-                    console.log("ok");
+                    }
                     (<HTMLInputElement>document.getElementById("txtPatente")).value="";
                     (<HTMLInputElement>document.getElementById("txtPrecio")).value="";
-                    (<HTMLSelectElement>document.getElementById("cboMarca")).value="";
                     (<HTMLInputElement>document.getElementById("txtPatente")).readOnly=false;
                     (<HTMLInputElement>document.getElementById("hdnIdModificacion")).value=""; 
             })
             .fail(function(aaa){
-
+                console.log(JSON.stringify(aaa));
+                
             });
 
 
