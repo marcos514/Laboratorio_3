@@ -22,7 +22,15 @@ namespace Enlace
 
             let formData:FormData=new FormData();
             formData.append("cadenaJson",JSON.stringify(auto.ToJason()));
-            formData.append("caso", "agregar");
+            if($("#hdnIdModificacion").val()=="modificar")
+            {
+                formData.append("caso", "modificar");
+            }
+            else
+            {
+                formData.append("caso", "agregar");                
+            }
+            
             formData.append("foto", archivo.files[0]);
 
 
@@ -42,6 +50,8 @@ namespace Enlace
                     $("#txtPatente").val("");
                     $("#txtPrecio").val("");
                     $("#foto").val("");
+                    $("#hdnIdModificacion").val("");
+                    $("#divImg").empty();
 
                 }
                 else
@@ -75,7 +85,40 @@ namespace Enlace
                 for(let i=0;i<params.length;i++)
                 {
                     let json:string=JSON.stringify(params[i]);
-                    $("#divTabla").append(`<tr><td>${params[i].patente}</td><td>${params[i].marca}</td><td>${params[i].precio}</td><td><img id="imgFoto" src=BACKEND/${params[i].path} width="50px" height="50px" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(${json})' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar("${json}")' value='Modificar'/> </td></tr>`);
+                    $("#divTabla").append(`<tr><td colspan='2'>${params[i].patente}</td><td colspan='2'>${params[i].marca}</td><td colspan='2'>${params[i].precio}</td><td colspan='2'><img id="imgFoto" src=BACKEND/${params[i].path} width="50px" height="50px" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(${json})' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar("${json}")' value='Modificar'/> </td></tr>`);
+                }
+                
+            })
+            .fail(function(params){
+                console.log(params);
+            });
+        }
+
+        public static FiltrarMarca()
+        {
+            let pagina : string = "./BACKEND/administrar.php";
+            let formData:FormData=new FormData();
+            formData.append("caso", "mostrar");
+            $.ajax({
+                type: 'POST',
+                url: pagina,
+                dataType:"json",
+                data: formData,
+                contentType: false,
+                processData: false
+
+            })
+            .done(function (params) 
+            {
+                $("#divTabla").html("");
+                for(let i=0;i<params.length;i++)
+                {
+                    if(params[i].marca==$("#cboMarca").val())
+                    {
+                        let json:string=JSON.stringify(params[i]);
+                        $("#divTabla").append(`<tr><td>${params[i].patente}</td><td colspan='2'>${params[i].marca}</td><td colspan='2'>${params[i].precio}</td><td colspan='2'><img id="imgFoto" src=BACKEND/${params[i].path} width="50px" height="50px" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(${json})' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar("${json}")' value='Modificar'/> </td></tr>`);
+                    }
+                    
                 }
                 
             })
@@ -160,7 +203,7 @@ namespace Enlace
             });
 
         }
-            
+
     
     }
 

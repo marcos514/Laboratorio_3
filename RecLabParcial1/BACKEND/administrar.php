@@ -119,7 +119,7 @@ switch ($caso)
                 $objLinea = json_decode($linea);
 
                 if($objLinea->patente == $obj->patente){
-                    unlink("..".$objLinea->path);
+                    unlink($objLinea->path);
                     continue;
                 }
                 
@@ -128,7 +128,7 @@ switch ($caso)
         }
 
         $string .=  $cadenaJSON . "\r\n";
-        move_uploaded_file($_FILES["foto"]["tmp_name"], "..".$obj->path);
+        move_uploaded_file($_FILES["foto"]["tmp_name"],$obj->path);
         
         
 

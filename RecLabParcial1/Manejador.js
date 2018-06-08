@@ -37,7 +37,12 @@ var Enlace;
             var auto = new Clases.Auto(patente, marca, precio, path);
             var formData = new FormData();
             formData.append("cadenaJson", JSON.stringify(auto.ToJason()));
-            formData.append("caso", "agregar");
+            if ($("#hdnIdModificacion").val() == "modificar") {
+                formData.append("caso", "modificar");
+            }
+            else {
+                formData.append("caso", "agregar");
+            }
             formData.append("foto", archivo.files[0]);
             $.ajax({
                 type: 'POST',
@@ -53,6 +58,8 @@ var Enlace;
                     $("#txtPatente").val("");
                     $("#txtPrecio").val("");
                     $("#foto").val("");
+                    $("#hdnIdModificacion").val("");
+                    $("#divImg").empty();
                 }
                 else {
                     console.log("Error al subir el archivo");
@@ -78,7 +85,32 @@ var Enlace;
                 $("#divTabla").html("");
                 for (var i = 0; i < params.length; i++) {
                     var json = JSON.stringify(params[i]);
-                    $("#divTabla").append("<tr><td>" + params[i].patente + "</td><td>" + params[i].marca + "</td><td>" + params[i].precio + "</td><td><img id=\"imgFoto\" src=BACKEND/" + params[i].path + " width=\"50px\" height=\"50px\" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar(\"" + json + "\")' value='Modificar'/> </td></tr>");
+                    $("#divTabla").append("<tr><td colspan='2'>" + params[i].patente + "</td><td colspan='2'>" + params[i].marca + "</td><td colspan='2'>" + params[i].precio + "</td><td colspan='2'><img id=\"imgFoto\" src=BACKEND/" + params[i].path + " width=\"50px\" height=\"50px\" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar(\"" + json + "\")' value='Modificar'/> </td></tr>");
+                }
+            })
+                .fail(function (params) {
+                console.log(params);
+            });
+        };
+        Manejador.FiltrarMarca = function () {
+            var pagina = "./BACKEND/administrar.php";
+            var formData = new FormData();
+            formData.append("caso", "mostrar");
+            $.ajax({
+                type: 'POST',
+                url: pagina,
+                dataType: "json",
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+                .done(function (params) {
+                $("#divTabla").html("");
+                for (var i = 0; i < params.length; i++) {
+                    if (params[i].marca == $("#cboMarca").val()) {
+                        var json = JSON.stringify(params[i]);
+                        $("#divTabla").append("<tr><td>" + params[i].patente + "</td><td colspan='2'>" + params[i].marca + "</td><td colspan='2'>" + params[i].precio + "</td><td colspan='2'><img id=\"imgFoto\" src=BACKEND/" + params[i].path + " width=\"50px\" height=\"50px\" /></td><td><input type='button' onclick='Enlace.Manejador.Eliminar(" + json + ")' value='Eliminar'/><input type='button' onclick='Enlace.Manejador.Modificar(\"" + json + "\")' value='Modificar'/> </td></tr>");
+                    }
                 }
             })
                 .fail(function (params) {
@@ -143,3 +175,31 @@ var Enlace;
     }());
     Enlace.Manejador = Manejador;
 })(Enlace || (Enlace = {}));
+
+$(window).load(function(){
+
+    $(function() {
+     $('#foto').change(function(e) {
+         addImage(e); 
+        });
+   
+        function addImage(e){
+         var file = e.target.files[0],
+         imageType = /image.*/;
+       
+         if (!file.type.match(imageType))
+          return;
+     
+         var reader = new FileReader();
+         reader.onload = fileOnload;
+         reader.readAsDataURL(file);
+        }
+     
+        function fileOnload(e) {
+         var result=e.target.result;
+         $("#divImg").empty();
+         $("#divImg").append('<img id="imgSalida" width="50%" height="50%" src="" />');
+         $('#imgSalida').attr("src",result);
+        }
+       });
+     });
